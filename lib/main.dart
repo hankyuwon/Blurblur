@@ -7,6 +7,14 @@ import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled20/regex_model.dart';
 import 'package:flutter_chip_tags/flutter_chip_tags.dart';
+import 'package:flutter_chips_input/flutter_chips_input.dart';
+import 'package:untitled20/ChipModel.dart';
+import 'dart:math';
+import 'ChipModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+
+List<ChipModel> chipList = [];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,12 +22,11 @@ void main() {
     return ErrorWidget(details.exception);
   };
   runApp(ChangeNotifierProvider(
-    create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false, Custom1: false,Custom2: false,Custom3: false),
+    create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false),
       child: new MyApp())
   );
 }
 class MyApp extends StatelessWidget {
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +81,7 @@ class MyApp extends StatelessWidget {
       return <DetectObject>[
         DetectObject(label: 'dummy1', confidence: 0.75),
         DetectObject(label: 'dummy2', confidence: 0.75),
-        DetectObject(label: 'dummy3', confidence: 0.75)
+        DetectObject(label: 'dummy3', confidence: 0.75),
       ];
     };
     configs.ocrExtractFunc =
@@ -85,21 +92,95 @@ class MyApp extends StatelessWidget {
         return 'Dummy ocr text';
       }
     };
-
     configs.customStickerOnly = true;
     configs.customStickers = [
       'assets/icon/cus1.png',
       'assets/icon/cus2.png',
       'assets/icon/cus3.png',
       'assets/icon/cus4.png',
-      'assets/icon/cus5.png'
+      'assets/icon/cus5.png',
     ];
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Generated App',
       theme: new ThemeData(
         primaryColor: Colors.white,
       ),
       home: new MyHomePage(isSelected: [false]),
+    );
+  }
+}
+
+
+class ChipExample extends StatefulWidget {
+  const ChipExample({Key? key}) : super(key: key);
+  @override
+  State<ChipExample> createState() => _ChipExampleState();
+}
+class _ChipExampleState extends State<ChipExample> {
+  // To Store added chips.
+  final TextEditingController _chipTextController = TextEditingController();
+  // _ChipExampleState({Key? key, required this.chipList});
+  //A Function to delete a Chip when user click on deleteIcon on Chip
+  void _deleteChip(String id) {
+    setState(() {
+      chipList.removeWhere((element) => element.id == id);
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Text("Blind 목록",style: TextStyle(fontSize: 25,),),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Wrap(
+                spacing: 10,
+                children: chipList.map((chip) => Chip(
+                  label: Text(chip.name),
+                  backgroundColor: Colors.tealAccent,
+                  onDeleted: ()=> _deleteChip(chip.id), // call delete function by passing click chip id
+                ))
+                    .toList(),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _chipTextController,
+                            decoration:
+                            InputDecoration(border: OutlineInputBorder()),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // add data text enter in textField into ChipModel
+                              setState(() {
+                                chipList.add(ChipModel(
+                                    id: DateTime.now().toString(),
+                                    name: _chipTextController.text));
+                                _chipTextController.text = '';
+                              });
+                            },
+                            child: Text("확인"))
+                      ],
+                    )),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -115,61 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<ImageObject> _imgObjs = [];
   File? _image;
 
-  final myController = TextEditingController();
-
-  final List<String> blurmokrok=['이거','저거','요고','조고'];
   late String inputTitle;
-
-  void FlutterDialog2() {
-    showDialog(
-        context: context,
-        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            //Dialog Main Title
-            title: Column(
-              children: <Widget>[
-                new Text("Blind 하고 싶은 Text를 입력하세요."),
-                ChipTags(
-                  list: blurmokrok,
-                  chipColor: Colors.green,
-                  iconColor: Colors.white,
-                  textColor: Colors.white,
-                  chipPosition: ChipPosition.above,
-                  separator: "a",
-                  createTagOnSubmit: false,
-                  decoration: InputDecoration(hintText: "Your Custom Hint"),
-                  keyboardType: TextInputType.text,
-                ),
-              ],
-              
-            ),
-            //
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-            ),
-            actions: <Widget>[
-              TextButton(
-                child:Text('취소'),
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text("확인"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   var isSwitched=false;
@@ -240,13 +267,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     IconButton(
                       icon: Icon(Icons.menu),
                       onPressed: (){
-
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ChipExample()));
                       }
                     ),
                     IconButton(
                       icon: Icon(Icons.add),
                       onPressed: (){
-                        FlutterDialog2();
                       },
                     )
                   ]
@@ -355,45 +381,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            // ListTile(
-            //   title:Padding(
-            //       padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-            //       child: Text('Custom1')),
-            //   trailing: Switch(
-            //     value: Provider.of<Regex_model>(context).Custom1,
-            //     onChanged: (value){
-            //       setState(() {
-            //         Provider.of<Regex_model>(context,listen: false).changeRegex9();
-            //       });
-            //     },
-            //   ),
-            // ),
-            // ListTile(
-            //   title:Padding(
-            //       padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-            //       child: Text('Custom2')),
-            //   trailing: Switch(
-            //     value: Provider.of<Regex_model>(context).Custom2,
-            //     onChanged: (value){
-            //       setState(() {
-            //         Provider.of<Regex_model>(context,listen: false).changeRegex10();
-            //       });
-            //     },
-            //   ),
-            // ),
-            // ListTile(
-            //   title:Padding(
-            //       padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-            //       child: Text('Custom3')),
-            //   trailing: Switch(
-            //     value: Provider.of<Regex_model>(context).Custom3,
-            //     onChanged: (value){
-            //       setState(() {
-            //         Provider.of<Regex_model>(context,listen: false).changeRegex11();
-            //       });
-            //     },
-            //   ),
-            // ),
             ListTile(
               title:Text('버전명시',style: TextStyle(fontSize: 20.0),),
             ),
@@ -421,8 +408,6 @@ class _MyHomePageState extends State<MyHomePage> {
               width: widget.isSelected[0]? 300: 300,
               height: widget.isSelected[0]? 130: 130,
               color: widget.isSelected[0]? Colors.greenAccent: Colors.white,
-
-
               duration: Duration(seconds: 2),
               curve: Curves.fastLinearToSlowEaseIn,
               child: Row(
@@ -543,7 +528,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                         .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
                                       return const ImagePicker(mode:0,maxCount:10000);
                                     }));
-
                                     if ((objects?.length ?? 0) > 0) {
                                       setState(() {
                                         _imgObjs = objects!;
@@ -568,7 +552,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           opacity: 0.1,
                           duration: Duration(seconds:1),
                               ),
-
                         widget.isSelected[0]?AnimatedOpacity(
                           child: IconButton(
                             onPressed: ()async{
@@ -576,7 +559,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                   .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
                                 return const ImagePicker(mode:1,maxCount: 10000);
                               }));
-
                               if ((objects?.length ?? 0) > 0) {
                                 setState(() {
                                   _imgObjs = objects!;
@@ -602,7 +584,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           duration: Duration(seconds: 1),
                         ),
                             ]
-
                         ),
                 )
               ]
@@ -610,8 +591,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-
     );
   }
 }
-
