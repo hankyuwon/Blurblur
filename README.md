@@ -5,10 +5,18 @@
 **pubspec.yaml** 에
 ```
   gallery_saver: ^2.3.2
+  cupertino_icons: ^1.0.2
   intl: ^0.17.0
   advance_image_picker: ^0.1.7+1
   image_editor_dove: ^0.0.2
   blurrycontainer: ^1.0.2
+  google_ml_kit: ^0.12.0
+  image_picker: ^0.8.5+3
+  camera: ^0.9.7+1
+  provider: ^6.0.3
+  flutter_chip_tags: ^2.0.2
+  flutter_chips_input: ^2.0.0
+  shared_preferences: ^2.0.15
   
 ```
 를 추가하세요
@@ -39,15 +47,6 @@ image_editor : 각자의 flutter 주소\.pub-cache\hosted\pub.dartlang.org\image
 
 
 ## 텍스트 감지 코드 실행법
-
-### 의존성 명시
-**pubspec.yaml** 에
-```
-  google_ml_kit: ^0.12.0
-  image_picker: ^0.8.5+3
-  camera: ^0.10.0
-```
-를 추가하세요.
 
 ### 파이어베이스 연동
 코드를 실행하기 위해서 **파이어베이스 연동**이 필요합니다.  
