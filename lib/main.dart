@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:intl/intl.dart';
@@ -13,9 +12,14 @@ import 'dart:math';
 import 'ChipModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter/material.dart' hide BoxDecoration,BoxShadow;
+import 'package:untitled20/image_data.dart';
 
 List<ChipModel> chipList = [];
 bool flag = true;
+List<ImageObject> _imgObjs = [];
+File? _image;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +27,7 @@ void main() {
     return ErrorWidget(details.exception);
   };
   runApp(ChangeNotifierProvider(
-      create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false),
+      create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false, isPr: false),
       child: new MyApp())
   );
 }
@@ -102,11 +106,14 @@ class MyApp extends StatelessWidget {
       'assets/icon/cus5.png',
     ];
     return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Generated App',
-      theme: new ThemeData(
-        primaryColor: Colors.white,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        backgroundColor: Color.fromARGB(131, 52, 215, 229),
       ),
+      darkTheme: ThemeData(
+        backgroundColor: Color.fromARGB(0, 255, 255, 255),
+      ),
+      debugShowCheckedModeBanner: false,
       home: new MyHomePage(isSelected: [false]),
     );
   }
@@ -318,23 +325,80 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
+enum AvatarType { TYPE1, TYPE2, TYPE3, TYPE4 }
+
+class AvatarWidget extends StatelessWidget {
+  AvatarType type;
+
+  AvatarWidget({
+    Key? key,
+    required this.type,
+  }) : super(key: key);
+
+  Widget type1Widget() {
+    return neuorphismButton1();
+  }
+
+  Widget type2Widget() {
+    return neuorphismButton2();
+  }
+
+  Widget type3Widget() {
+    return neuorphismButton3();
+  }
+
+/*
+  Widget type4Widget() {
+    return neuorphismButton4()
+  }
+*/
+  @override
+  Widget build(BuildContext context) {
+    switch (type) {
+      case AvatarType.TYPE1:
+        return type1Widget();
+      case AvatarType.TYPE2:
+        return type2Widget();
+      case AvatarType.TYPE3:
+        return type3Widget();
+      case AvatarType.TYPE4:
+        return type3Widget();
+    }
+    return Container();
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  List<ImageObject> _imgObjs = [];
-  File? _image;
+  Widget _button1() {
+    return Stack(
+      children: [AvatarWidget(type: AvatarType.TYPE1)],
+    );
+  }
+
+  Widget _button2() {
+    return Stack(
+      children: [
+        AvatarWidget(
+          type: AvatarType.TYPE2,
+        ),
+      ],
+    );
+  }
+
+  Widget _button3() {
+    return Stack(
+      children: [
+        AvatarWidget(
+          type: AvatarType.TYPE3,
+        ),
+      ],
+    );
+  }
 
   late String inputTitle;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  var isSwitched=false;
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   setState(() {
-  //     Provider.of<Regex_model>(context,listen: false).getSwitch();
-  //   });
-  // }
   @override
   void initState() {
     // TODO: implement initState
@@ -347,11 +411,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       drawer: Drawer(
-        backgroundColor: widget.isSelected[0]?Colors.greenAccent.shade200:Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -361,26 +424,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ListTile(
                   leading: Icon(
                     Icons.menu,
-                    color: widget.isSelected[0]? Colors.white: Colors.black,
                   ),
                   title:Text('설 정',style: TextStyle(fontSize: 20),),
                 ),
                 decoration: BoxDecoration(
-                    color: Colors.greenAccent.shade100,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.green.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0,3)
-                      )
-                    ],
                     borderRadius: BorderRadius.all(Radius.circular(50))
                 ),
               ),
             ),
             ListTile(
-                title:Text('블러 처리 목록',style: TextStyle(fontSize: 23.0,
+                title:Text('블러 목록',style: TextStyle(fontSize: 23.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),),
                 trailing:
@@ -536,202 +589,292 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+        child: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text('B l u r B l u r',style: TextStyle(color: Colors.black)),
+          backgroundColor: Provider.of<Regex_model>(context).isPr
+              ? Color(0xffAEE6CB)
+              : Colors.white,
+        ),
+      ),
       body:
       SingleChildScrollView(
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedContainer(
-              width: widget.isSelected[0]? 1000: 1000,
-              height: widget.isSelected[0]? 1000: 1000,
-              color: widget.isSelected[0]? Colors.greenAccent: Colors.white,
-              duration: Duration(seconds: 2),
-              curve: Curves.fastLinearToSlowEaseIn,
+                duration: const Duration(milliseconds: 200),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: _button1()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 3,
+                  child: Container(
+                    //color: isPressed ? Colors.white : Colors.green,
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    child: _button2(),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  color: Provider.of<Regex_model>(context).isPr
+                      ? Color(0xffAEE6CB)
+                      : Colors.white,
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 3,
+                  child: Container(
+                    //color: isPressed ? Colors.white : Colors.green,
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    child: _button3(),
+                  ),
+                ),
+              ],
             ),
-            AnimatedContainer(
-              width: widget.isSelected[0]? 300: 300,
-              height: widget.isSelected[0]? 130: 130,
-              color: widget.isSelected[0]? Colors.greenAccent: Colors.white,
-              duration: Duration(seconds: 2),
-              curve: Curves.fastLinearToSlowEaseIn,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10,0,0,0),
-                    child: IconButton(
-                      icon: Icon(Icons.menu),
-                      color: widget.isSelected[0]?Colors.white:Colors.black,
-                      onPressed: (){
-                        _scaffoldKey.currentState?.openDrawer();
-                      },
-                    ),
-                  ),
-                  Text("  B l u r   B l u r",style: TextStyle(fontStyle: FontStyle.normal,fontSize: 25,color:widget.isSelected[0]?Colors.white:Colors.black),)
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 100, 0, 0),
-              child: AnimatedContainer(
-                width: widget.isSelected[0]? 390: 0,
-                height: widget.isSelected[0]? 2: 2,
-                color: widget.isSelected[0]? Colors.white: Colors.white,
-                duration: Duration(seconds: 2),
-                curve: Curves.fastLinearToSlowEaseIn,
-              ),
-            ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(padding: EdgeInsets.fromLTRB(0, 230, 0, 0)),
-                  ToggleButtons(constraints:BoxConstraints(minWidth: 230.0, minHeight: 230.0),
-                      borderRadius: BorderRadius.circular(180),
-                      borderWidth: 5,
-                      disabledColor: Colors.grey,
-                      splashColor: Colors.green,
-                      highlightColor: Colors.green,
-                      focusColor: Colors.green,
-                      color: Colors.green,
-                      selectedColor: Colors.green,
-                      selectedBorderColor: Colors.white,
-                      hoverColor: Colors.green,
-                      children:[
-                        Icon(widget.isSelected[0]?Icons.shield:Icons.heart_broken,size: 130,
-                            color: widget.isSelected[0]?Colors.white:Colors.black12)],
-                      onPressed:(int index){setState(() {
-                        widget.isSelected[index] = !widget.isSelected[index];
-                      });},
-                      isSelected: widget.isSelected),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0)),
-                  Switch(
-                    value: widget.isSelected[0],
-                    onChanged: (value){
-                      setState(() {
-                        widget.isSelected[0]=value;
-                      });
-                    },
-                    activeColor: Colors.green,
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0)),
-                  widget.isSelected[0]?AnimatedOpacity(
-                    child: new Text(
-                      "감지가 활성 상태입니다.",
-                      style: new TextStyle(fontSize:25.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Roboto"),
-                    ),
-                    opacity: 1,
-                    duration: Duration(seconds:1),
-                  ):AnimatedOpacity(
-                    child: Text(
-                      "감지가 비활성 상태입니다.",
-                      style: new TextStyle(fontSize:25.0,
-                          color: const Color(0xFF000000),
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Roboto"),
-                    ),
-                    opacity: 0.3,
-                    duration: Duration(seconds: 1),
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 0)),
-                  widget.isSelected[0]?AnimatedOpacity(
-                    child: new Text(
-                      "n 개의 사진에 개인정보가 감지되었습니다.",
-                      style: new TextStyle(fontSize:20.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w200,
-                          fontFamily: "Roboto"),
-                    ),
-                    opacity: 1,
-                    duration: Duration(seconds: 1),
-                  ):AnimatedOpacity(
-                    child: Text(
-                      "활성화하여 개인정보를 보호하세요.",
-                      style: new TextStyle(fontSize:20.0,
-                          color: const Color(0xFF000000),
-                          fontWeight: FontWeight.w200,
-                          fontFamily: "Roboto"),
-                    ),
-                    opacity: 0.3,
-                    duration: Duration(seconds: 1),
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 100, 0, 0)),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
-                    child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          widget.isSelected[0]?AnimatedOpacity(
-                            child: IconButton(
-                              onPressed: ()async{
-                                // Get max 5 images
-                                final List<ImageObject>? objects = await Navigator.of(context)
-                                    .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
-                                  return const ImagePicker(mode:0,maxCount:10000);
-                                }));
-                                if ((objects?.length ?? 0) > 0) {
-                                  setState(() {
-                                    _imgObjs = objects!;
-                                  });
-                                }
-                              },
-                              icon: Icon(
-                                  Icons.enhance_photo_translate_outlined,
-                                  color: Colors.white,
-                                  size: 48.0),
-                            ),
-                            opacity: 1,
-                            duration: Duration(seconds: 1),
-                          ):AnimatedOpacity(
-                            child: IconButton(
-                              onPressed: (){},
-                              icon: Icon(
-                                  Icons.enhance_photo_translate_outlined,
-                                  color: Colors.white,
-                                  size: 48.0),
-                            ),
-                            opacity: 0.1,
-                            duration: Duration(seconds:1),
-                          ),
-                          widget.isSelected[0]?AnimatedOpacity(
-                            child: IconButton(
-                              onPressed: ()async{
-                                final List<ImageObject>? objects = await Navigator.of(context)
-                                    .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
-                                  return const ImagePicker(mode:1,maxCount: 10000);
-                                }));
-                                if ((objects?.length ?? 0) > 0) {
-                                  setState(() {
-                                    _imgObjs = objects!;
-                                  });
-                                }
-                              },
-                              icon: Icon(
-                                  Icons.photo_outlined,
-                                  color: Colors.white,
-                                  size: 48.0),
-                            ),
-                            duration: Duration(seconds: 1),
-                            opacity: 1,
-                          ):AnimatedOpacity(
-                            child: IconButton(
-                              onPressed: (){},
-                              icon: Icon(
-                                  Icons.photo_outlined,
-                                  color: Colors.white,
-                                  size: 48.0),
-                            ),
-                            opacity: 0.1,
-                            duration: Duration(seconds: 1),
-                          ),
-                        ]
-                    ),
-                  )
-                ]
-            )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class neuorphismButton1 extends StatefulWidget {
+
+  @override
+  State<neuorphismButton1> createState() => _neuorphismButton1State();
+}
+
+class _neuorphismButton1State extends State<neuorphismButton1> {
+  @override
+  Widget build(BuildContext context) {
+    Offset distance =
+    Provider.of<Regex_model>(context).isPr ? Offset(5, 5) : Offset(15, 15);
+    double blur = Provider.of<Regex_model>(context).isPr ? 5 : 20;
+    final backgroundColor =
+    Provider.of<Regex_model>(context).isPr ? Color(0xffAEE6CB) : Colors.white;
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  Provider.of<Regex_model>(context, listen: false).changeccc();
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 250,
+                width: 250,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: backgroundColor,
+                  //borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: -distance,
+                      blurRadius: blur,
+                      spreadRadius: 0.2,
+                      inset: Provider.of<Regex_model>(context).isPr,
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFA7A9AF),
+                      offset: distance,
+                      blurRadius: blur,
+                      spreadRadius: 0.2,
+                      inset: Provider.of<Regex_model>(context).isPr,
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  child: Align(
+                    child: ImageData(
+                      IconsPath.shield,
+                      color: Provider.of<Regex_model>(context).isPr
+                          ? Colors.white
+                          : Colors.black,
+                      width: 0.1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class neuorphismButton2 extends StatefulWidget {
+
+  @override
+  State<neuorphismButton2> createState() => _neuorphismButton2State();
+}
+
+class _neuorphismButton2State extends State<neuorphismButton2> {
+  @override
+  Widget build(BuildContext context) {
+    Offset distance =
+    Provider.of<Regex_model>(context).isPr ? Offset(3, 3) : Offset(9, 9);
+    double blur = Provider.of<Regex_model>(context).isPr ? 5 : 20;
+    final backgroundColor =
+    Provider.of<Regex_model>(context).isPr ? Color(0xffAEE6CB) : Colors.white;
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            child: GestureDetector(
+              /*onTap: () {
+                setState(() {
+                  isPressed = !isPressed;
+                });
+              }*/
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: -distance,
+                      blurRadius: blur,
+                      //spreadRadius: 0.1,
+                      //inset: isPressed,
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFA7A9AF),
+                      offset: distance,
+                      blurRadius: blur,
+                      //spreadRadius: 0.1,
+                      //inset: isPressed,
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  child: Align(
+                    child: IconButton(
+                      onPressed: ()async{
+                        final List<ImageObject>? objects = await Navigator.of(context)
+                            .push(PageRouteBuilder(pageBuilder: (context, animation, __){
+                              return const ImagePicker(mode: 0,maxCount: 0);
+                        }));
+                        if((objects?.length ?? 0) > 0){
+                          setState((){
+                            _imgObjs = objects!;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                          Icons.camera_enhance,
+                          color: Provider.of<Regex_model>(context).isPr
+                              ? Colors.white
+                              : Colors.black,
+                          size: MediaQuery.of(context).size.width * 0.075
+                      )
+                    )
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class neuorphismButton3 extends StatefulWidget {
+
+  @override
+  State<neuorphismButton3> createState() => _neuorphismButton3State();
+}
+
+class _neuorphismButton3State extends State<neuorphismButton3> {
+  @override
+  Widget build(BuildContext context) {
+    Offset distance =
+    Provider.of<Regex_model>(context).isPr ? Offset(3, 3) : Offset(9, 9);
+    double blur = Provider.of<Regex_model>(context).isPr ? 5 : 20;
+    final backgroundColor =
+    Provider.of<Regex_model>(context).isPr ? Color(0xffAEE6CB) : Colors.white;
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            child: GestureDetector(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: -distance,
+                      blurRadius: blur,
+                      //spreadRadius: 0.1,
+                      //inset: isPressed,
+                    ),
+                    BoxShadow(
+                      color: Color(0xFFA7A9AF),
+                      offset: distance,
+                      blurRadius: blur,
+                      //spreadRadius: 0.1,
+                      //inset: isPressed,
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  child: Align(
+                    child: IconButton(
+                      onPressed: ()async{
+                        final List<ImageObject>? objects = await Navigator.of(context)
+                            .push(PageRouteBuilder(pageBuilder: (context, animation, __){
+                              return const ImagePicker(mode:1,maxCount: 10000,);
+                        }));
+                        if((objects?.length ?? 0) > 0){
+                          setState((){
+                            _imgObjs = objects!;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                      Icons.image,
+                      color: Provider.of<Regex_model>(context).isPr
+                          ? Colors.white
+                          : Colors.black,
+                      size: MediaQuery.of(context).size.width * 0.075,
+                    ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

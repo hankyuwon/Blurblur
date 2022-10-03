@@ -10,6 +10,7 @@ class Regex_model with ChangeNotifier{
   bool isSwitched6;
   bool isSwitched7;
   bool isSwitched8;
+  bool isPr;
 
   late SharedPreferences prefs;
 
@@ -45,6 +46,10 @@ class Regex_model with ChangeNotifier{
     await prefs.setBool("isSwitched8",value);
     notifyListeners();
   }
+  saveisPr(bool value) async{
+    await prefs.setBool("isPr",value);
+    notifyListeners();
+  }
 
 
   getSwitch() async{
@@ -57,10 +62,21 @@ class Regex_model with ChangeNotifier{
     isSwitched6 = prefs.getBool('isSwitched6')!;
     isSwitched7 = prefs.getBool('isSwitched7')!;
     isSwitched8 = prefs.getBool('isSwitched8')!;
+    isPr = prefs.getBool('isPr')!;
     notifyListeners();
   }
 
-  Regex_model({required this.isSwitched1, required this.isSwitched2, required this.isSwitched3, required this.isSwitched4, required this.isSwitched5, required this.isSwitched6, required this.isSwitched7, required this.isSwitched8});
+  Regex_model({required this.isSwitched1, required this.isSwitched2, required this.isSwitched3, required this.isSwitched4, required this.isSwitched5, required this.isSwitched6, required this.isSwitched7, required this.isSwitched8, required this.isPr});
+
+
+  void changeccc() {
+    if (isPr == false) {
+      isPr = true;
+    } else {
+      isPr = false;
+    }
+    notifyListeners();
+  }
 
   void changeRegex1(){
 
