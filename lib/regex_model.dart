@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-class CustomText{
-
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Regex_model with ChangeNotifier{
   bool isSwitched1;
@@ -13,6 +10,55 @@ class Regex_model with ChangeNotifier{
   bool isSwitched6;
   bool isSwitched7;
   bool isSwitched8;
+
+  late SharedPreferences prefs;
+
+  saveSwitch1(bool value) async{
+    await prefs.setBool("isSwitched1",value);
+    notifyListeners();
+  }
+  saveSwitch2(bool value) async{
+    await prefs.setBool("isSwitched2",value);
+    notifyListeners();
+  }
+  saveSwitch3(bool value) async{
+    await prefs.setBool("isSwitched3",value);
+    notifyListeners();
+  }
+  saveSwitch4(bool value) async{
+    await prefs.setBool("isSwitched4",value);
+    notifyListeners();
+  }
+  saveSwitch5(bool value) async{
+    await prefs.setBool("isSwitched5",value);
+    notifyListeners();
+  }
+  saveSwitch6(bool value) async{
+    await prefs.setBool("isSwitched6",value);
+    notifyListeners();
+  }
+  saveSwitch7(bool value) async{
+    await prefs.setBool("isSwitched7",value);
+    notifyListeners();
+  }
+  saveSwitch8(bool value) async{
+    await prefs.setBool("isSwitched8",value);
+    notifyListeners();
+  }
+
+
+  getSwitch() async{
+    prefs = await SharedPreferences.getInstance();
+    isSwitched1 = prefs.getBool('isSwitched1')!;
+    isSwitched2 = prefs.getBool('isSwitched2')!;
+    isSwitched3 = prefs.getBool('isSwitched3')!;
+    isSwitched4 = prefs.getBool('isSwitched4')!;
+    isSwitched5 = prefs.getBool('isSwitched5')!;
+    isSwitched6 = prefs.getBool('isSwitched6')!;
+    isSwitched7 = prefs.getBool('isSwitched7')!;
+    isSwitched8 = prefs.getBool('isSwitched8')!;
+    notifyListeners();
+  }
 
   Regex_model({required this.isSwitched1, required this.isSwitched2, required this.isSwitched3, required this.isSwitched4, required this.isSwitched5, required this.isSwitched6, required this.isSwitched7, required this.isSwitched8});
 
