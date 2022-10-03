@@ -67,6 +67,7 @@
   flutter_chip_tags: ^2.0.2
   flutter_chips_input: ^2.0.0
   shared_preferences: ^2.0.15
+  flutter_inset_box_shadow: ^1.0.8
   
 ```
 를 추가하세요
