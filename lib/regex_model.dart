@@ -46,8 +46,15 @@ class Regex_model with ChangeNotifier{
     await prefs.setBool("isSwitched8",value);
     notifyListeners();
   }
-  saveisPr(bool value) async{
-    await prefs.setBool("isPr",value);
+  saveisPr() async{
+    if(isPr == false)
+      {
+        await prefs.setBool("isPr",false);
+      }
+    else
+      {
+        await prefs.setBool("isPr",true);
+      }
     notifyListeners();
   }
 

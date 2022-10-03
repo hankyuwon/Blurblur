@@ -16,6 +16,9 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration,BoxShadow;
 import 'package:untitled20/image_data.dart';
 
+late SharedPreferences pref;
+List<String> chipIdList = [];
+List<String> chipNameList = [];
 List<ChipModel> chipList = [];
 bool flag = true;
 List<ImageObject> _imgObjs = [];
@@ -31,6 +34,33 @@ void main() {
       child: new MyApp())
   );
 }
+
+loadChips() {
+  chipIdList = [];
+  chipNameList = [];
+  int len = chipList.length;
+  for (int i = 0; i < len; i++){
+    chipIdList.add(chipList[i].id);
+    chipNameList.add(chipList[i].name);
+  }
+}
+loadPref() async {
+  pref = await SharedPreferences.getInstance();
+  chipIdList = await (pref.getStringList('ChipID') ?? []);
+  chipNameList = await (pref.getStringList('ChipName') ?? []);
+  int len = chipIdList.length;
+  for (int i = 0; i < len; i++){
+    chipList.add(ChipModel(
+        id: chipIdList[i],
+        name: chipNameList[i]));
+  }
+}
+savePref() async {
+  await loadChips();
+  pref.setStringList('ChipID', chipIdList);
+  pref.setStringList('ChipName', chipNameList);
+}
+
 class MyApp extends StatelessWidget {
 
   @override
@@ -126,53 +156,11 @@ class ChipExample extends StatefulWidget {
   State<ChipExample> createState() => _ChipExampleState();
 }
 class _ChipExampleState extends State<ChipExample>{
-  late SharedPreferences pref;
-  List<String> chipIdList = [];
-  List<String> chipNameList = [];
-
-  @override
-  _loadPref() async {
-    pref = await SharedPreferences.getInstance();
-    chipIdList = await (pref.getStringList('ChipID') ?? []);
-    chipNameList = await (pref.getStringList('ChipName') ?? []);
-    int len = chipIdList.length;
-    for (int i = 0; i < len; i++){
-      chipList.add(ChipModel(
-          id: chipIdList[i],
-          name: chipNameList[i]));
-    }
-  }
-
-  @override
-  _loadChips() {
-    chipIdList = [];
-    chipNameList = [];
-    int len = chipList.length;
-    for (int i = 0; i < len; i++){
-      chipIdList.add(chipList[i].id);
-      chipNameList.add(chipList[i].name);
-    }
-  }
-
-  @override
-  _savePref() async {
-    await _loadChips();
-    pref.setStringList('ChipID', chipIdList);
-    pref.setStringList('ChipName', chipNameList);
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future(()async{
-      if (flag){
-        _loadPref();
-        flag = false;
-      }
-      setState((){});
-    });
-
   }
   // To Store added chips.
   final TextEditingController _chipTextController = TextEditingController();
@@ -182,7 +170,7 @@ class _ChipExampleState extends State<ChipExample>{
     setState(() {
       chipList.removeWhere((element) => element.id == id);
     });
-    _savePref();
+    savePref();
   }
 
   @override
@@ -275,7 +263,7 @@ class _ChipExampleState extends State<ChipExample>{
                                     name: _chipTextController.text));
                                 _chipTextController.text = '';
                               });
-                              _savePref();
+                              savePref();
                               print(chipList);
                             },
                           style:ButtonStyle(
@@ -320,7 +308,6 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key ?key, required this.isSelected}) : super(key: key);
   List<bool> isSelected = [false];
 
-
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
@@ -328,6 +315,7 @@ class MyHomePage extends StatefulWidget {
 enum AvatarType { TYPE1, TYPE2, TYPE3, TYPE4 }
 
 class AvatarWidget extends StatelessWidget {
+
   AvatarType type;
 
   AvatarWidget({
@@ -403,11 +391,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future(() async {
-      Provider.of<Regex_model>(context,listen: false).getSwitch();
-      setState(() {});
-    });
+    Provider.of<Regex_model>(context,listen: false).getSwitch();
+    if (flag){
+      loadPref();
+      flag = false;
+    }
+    setState((){});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -673,6 +664,7 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
               onTap: () {
                 setState(() {
                   Provider.of<Regex_model>(context, listen: false).changeccc();
+                  Provider.of<Regex_model>(context,listen: false).saveisPr();
                 });
               },
               child: AnimatedContainer(
