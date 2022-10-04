@@ -2,7 +2,7 @@
     package="com.example.untitled20">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
    <application
-        android:label="untitled20"
+        android:label="Blurblur"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
