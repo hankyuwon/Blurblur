@@ -206,7 +206,7 @@ class _ChipExampleState extends State<ChipExample>{
                     children: chipList
                         .map((chip) => Chip(
                       label: Text(chip.name),
-                      backgroundColor: HexColor("E6FFFF"),
+                      backgroundColor: Color(0xffdcfdee),
                       onDeleted: () => _deleteChip(chip
                           .id), // call delete function by passing click chip id
                     ))
@@ -219,7 +219,7 @@ class _ChipExampleState extends State<ChipExample>{
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Padding(
-                    padding: EdgeInsets.only(bottom: 20.0),
+                    padding: EdgeInsets.only(bottom: 20.0,left: 20.0,right:20.0),
                     child: Row(
                       children: [
                         Expanded(
@@ -268,7 +268,7 @@ class _ChipExampleState extends State<ChipExample>{
                             },
                           style:ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              HexColor("d3d3d3"),
+                              Color(0xffAEE6CB),
                             ),
                             padding: MaterialStateProperty.all(
                                 const EdgeInsets.all(15)),
@@ -447,8 +447,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('얼굴')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched1,
                 onChanged: (value){
                   setState(() {
@@ -462,8 +462,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('이메일 주소')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched7,
                 onChanged: (value){
                   setState(() {
@@ -477,8 +477,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('주민등록번호')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched8,
                 onChanged: (value){
                   setState(() {
@@ -493,8 +493,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('핸드폰 번호')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched2,
                 onChanged: (value){
                   setState(() {
@@ -509,8 +509,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('주소')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched3,
                 onChanged: (value){
                   setState(() {
@@ -525,8 +525,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('운전면허 번호')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched4,
                 onChanged: (value){
                   setState(() {
@@ -541,8 +541,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('계좌번호')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched5,
                 onChanged: (value){
                   setState(() {
@@ -557,8 +557,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: Text('카드 번호')),
               trailing: Switch(
-                activeTrackColor: Colors.blueGrey,
-                activeColor: Colors.grey,
+                activeTrackColor: Color(0xffAEE6CB),
+                activeColor: Colors.white,
                 value: Provider.of<Regex_model>(context).isSwitched6,
                 onChanged: (value){
                   setState(() {
@@ -599,7 +599,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 duration: const Duration(milliseconds: 200),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.75,
-                child: _button1()),
+                child: _button1(),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -659,52 +660,71 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: SizedBox(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  Provider.of<Regex_model>(context, listen: false).changeccc();
-                  Provider.of<Regex_model>(context,listen: false).saveisPr();
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                height: 250,
-                width: 250,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: backgroundColor,
-                  //borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: -distance,
-                      blurRadius: blur,
-                      spreadRadius: 0.2,
-                      inset: Provider.of<Regex_model>(context).isPr,
+          child: Column(
+            children: [
+              SizedBox(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      Provider.of<Regex_model>(context, listen: false).changeccc();
+                      Provider.of<Regex_model>(context,listen: false).saveisPr();
+                    });
+                    print(Provider.of<Regex_model>(context, listen: false).isPr);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: 250,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: backgroundColor,
+                      //borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: -distance,
+                          blurRadius: blur,
+                          spreadRadius: 0.2,
+                          inset: Provider.of<Regex_model>(context).isPr,
+                        ),
+                        BoxShadow(
+                          color: Color(0xFFA7A9AF),
+                          offset: distance,
+                          blurRadius: blur,
+                          spreadRadius: 0.2,
+                          inset: Provider.of<Regex_model>(context).isPr,
+                        ),
+                      ],
                     ),
-                    BoxShadow(
-                      color: Color(0xFFA7A9AF),
-                      offset: distance,
-                      blurRadius: blur,
-                      spreadRadius: 0.2,
-                      inset: Provider.of<Regex_model>(context).isPr,
-                    ),
-                  ],
-                ),
-                child: SizedBox(
-                  child: Align(
-                    child: ImageData(
-                      IconsPath.shield,
-                      color: Provider.of<Regex_model>(context).isPr
-                          ? Colors.white
-                          : Colors.black,
-                      width: 0.1,
+                    child: SizedBox(
+                      child: Align(
+                        child: ImageData(
+                          IconsPath.shield,
+                          color: Provider.of<Regex_model>(context).isPr
+                              ? Colors.white
+                              : Colors.black,
+                          width: 0.1,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+              Padding(padding: EdgeInsets.only(bottom: 20.0)),
+              Provider.of<Regex_model>(context).isPr
+                  ? Text(" Custom blur 가 적용되었습니다. ",
+                style: TextStyle(
+                fontWeight:FontWeight.bold,
+                fontSize: 23,
+                color: Colors.black,
+              ),)
+                  : Text(" Custom blur 가 해제되었습니다. ",
+                style: TextStyle(
+                fontWeight:FontWeight.bold,
+                fontSize: 23,
+                color: Colors.black,
+              ),),
+            ],
           ),
         ),
       ),
@@ -733,11 +753,6 @@ class _neuorphismButton2State extends State<neuorphismButton2> {
           scrollDirection: Axis.vertical,
           child: SizedBox(
             child: GestureDetector(
-              /*onTap: () {
-                setState(() {
-                  isPressed = !isPressed;
-                });
-              }*/
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 height: 50,
