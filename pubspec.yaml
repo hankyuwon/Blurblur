@@ -43,6 +43,8 @@ dependencies:
   flutter_chips_input: ^2.0.0
   shared_preferences: ^2.0.15
   flutter_inset_box_shadow: ^1.0.8
+  photo_manager: ^2.3.0
+  flutter_local_notifications: ^11.0.1
 
 dev_dependencies:
   flutter_test:

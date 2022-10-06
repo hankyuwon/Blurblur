@@ -15,6 +15,9 @@ import 'dart:async';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter/material.dart' hide BoxDecoration,BoxShadow;
 import 'package:untitled20/image_data.dart';
+import 'package:photo_manager/photo_manager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:image_editor_dove/image_editor.dart' as ie;
 
 late SharedPreferences pref;
 List<String> chipIdList = [];
@@ -23,16 +26,61 @@ List<ChipModel> chipList = [];
 bool flag = true;
 List<ImageObject> _imgObjs = [];
 File? _image;
+File lastPath = File("");
+var fiveSec = Duration(seconds: 5);
+dynamic backgroundrecognise;
+
+
 
 void main() {
+  LocalNotification localNotification = LocalNotification();
+  localNotification.initLocalNotificationPlugin();
   WidgetsFlutterBinding.ensureInitialized();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return ErrorWidget(details.exception);
   };
   runApp(ChangeNotifierProvider(
-      create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false, isPr: false),
+      create: (context) => Regex_model(isSwitched1: false, isSwitched2: false, isSwitched3: false, isSwitched4: false, isSwitched5: false, isSwitched6: false, isSwitched7: false, isSwitched8: false, isPr: false, firstapp: true),
       child: new MyApp())
   );
+}
+
+class LocalNotification {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  initLocalNotificationPlugin() async {
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
+    final InitializationSettings initializationSettings = await InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+  warningNotification() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'id',
+      'name',
+      icon: "@mipmap/ic_launcher",
+      priority: Priority.max,
+      importance: Importance.max,
+      showWhen: true,
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(0, 'Blur blur', '최근 이미지에 개인정보 위험 요소가 ${backgroundrecognise}개 존재합니다', platformChannelSpecifics, payload: 'item x');
+  }
+  warningNotification2() async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'id',
+      'name',
+      icon: "@mipmap/ic_launcher",
+      priority: Priority.max,
+      importance: Importance.max,
+      showWhen: true,
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(0, 'Blur blur', '환영합니다!', platformChannelSpecifics, payload: 'item x');
+  }
 }
 
 loadChips() {
@@ -392,6 +440,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     Provider.of<Regex_model>(context,listen: false).getSwitch();
+    Provider.of<Regex_model>(context,listen: false).getfirstapp();
     if (flag){
       loadPref();
       flag = false;
@@ -454,6 +503,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     Provider.of<Regex_model>(context,listen: false).changeRegex1();
                     Provider.of<Regex_model>(context,listen: false).saveSwitch1(value);
+                    print('Provider.of<Regex_model>(context).isSwitched1');
                   });
                 },
               ),
@@ -647,6 +697,41 @@ class neuorphismButton1 extends StatefulWidget {
 }
 
 class _neuorphismButton1State extends State<neuorphismButton1> {
+  void _fetchAssets() async {
+    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    final recentAlbum = albums.first;
+    final recentAssets = await recentAlbum.getAssetListRange(
+      start: 0, // start at index 0
+      end: 1, // end at a very big index (to get all the assets)
+    );
+
+    File assetPath = await recentAssets[0].loadFile() ?? File('');
+
+    if ( lastPath.toString() != assetPath.toString() ){
+        backgroundrecognise =
+        await ie.ImageEditorState().getRecognisedFace2(assetPath,Provider.of<Regex_model>(context,listen: false).isSwitched1,
+            Provider.of<Regex_model>(context,listen: false).isSwitched2,
+            Provider.of<Regex_model>(context,listen: false).isSwitched3,
+            Provider.of<Regex_model>(context,listen: false).isSwitched4,
+            Provider.of<Regex_model>(context,listen: false).isSwitched5,
+            Provider.of<Regex_model>(context,listen: false).isSwitched6,
+            Provider.of<Regex_model>(context,listen: false).isSwitched7,
+            Provider.of<Regex_model>(context,listen: false).isSwitched8);
+        LocalNotification().warningNotification();
+        lastPath = assetPath;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Timer.periodic(fiveSec, (Timer timer) => {
+      if(Provider.of<Regex_model>(context, listen: false).isPr){
+        _fetchAssets()
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Offset distance =
@@ -712,13 +797,13 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 20.0)),
               Provider.of<Regex_model>(context).isPr
-                  ? Text(" Custom blur 가 적용되었습니다. ",
+                  ? Text(" 백그라운드 감지가 활성화중입니다. ",
                 style: TextStyle(
                 fontWeight:FontWeight.bold,
                 fontSize: 23,
                 color: Colors.black,
               ),)
-                  : Text(" Custom blur 가 해제되었습니다. ",
+                  : Text(" 백그라운드 감지가 해제되었습니다. ",
                 style: TextStyle(
                 fontWeight:FontWeight.bold,
                 fontSize: 23,

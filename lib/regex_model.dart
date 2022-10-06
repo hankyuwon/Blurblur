@@ -11,6 +11,7 @@ class Regex_model with ChangeNotifier{
   bool isSwitched7;
   bool isSwitched8;
   bool isPr;
+  bool firstapp = true;
 
   late SharedPreferences prefs;
 
@@ -57,7 +58,16 @@ class Regex_model with ChangeNotifier{
       }
     notifyListeners();
   }
+  savefirstapp(bool value) async{
+    await prefs.setBool("firstapp",value);
+    notifyListeners();
+  }
 
+  getfirstapp()async{
+    prefs=await SharedPreferences.getInstance();
+    firstapp = prefs.getBool("firstapp")!;
+    notifyListeners();
+  }
 
   getSwitch() async{
     prefs = await SharedPreferences.getInstance();
@@ -73,7 +83,7 @@ class Regex_model with ChangeNotifier{
     notifyListeners();
   }
 
-  Regex_model({required this.isSwitched1, required this.isSwitched2, required this.isSwitched3, required this.isSwitched4, required this.isSwitched5, required this.isSwitched6, required this.isSwitched7, required this.isSwitched8, required this.isPr});
+  Regex_model({required this.isSwitched1, required this.isSwitched2, required this.isSwitched3, required this.isSwitched4, required this.isSwitched5, required this.isSwitched6, required this.isSwitched7, required this.isSwitched8, required this.isPr, required this.firstapp});
 
 
   void changeccc() {
@@ -158,4 +168,11 @@ class Regex_model with ChangeNotifier{
 
     notifyListeners();
   }
+
+  void changefirstapp()
+  {
+    firstapp = false;
+    notifyListeners();
+  }
+
 }
