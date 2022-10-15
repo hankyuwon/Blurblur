@@ -370,7 +370,14 @@ class ImageEditorState extends State<ImageEditor>
     // String dongapartment = r'^[가-힣]+(구)(\s)[가-힣]+(동)(\s)[가-힣]+(아파트)(\s)[0-9]+(호)$';
 
     // String apartment = r'^(([가-힣]+(아파트))( |)[0-9]{0,5}+(동|아파트)';
-    String doromyoung = r'^([가-힣]{2,}(구))(\s+)([가-힣]{2,}동)';
+    String doromyoung = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?(([가-힣]{1,}동))?(\s)?(([가-힣]{1,}아파트)+)';
+    String doromyoungRegExp0 = r'[가-힣]{1,}시';
+    String doromyoungRegExp = r'[가-힣]{1,}동';
+    String doromyoungRegExp2 = r'[가-힣]{1,}아파트';
+    String doromyoungRegExp3 = r'[가-힣]{1,}구';
+    String doromyoungRegExp4 = r'[\d]{1,}동';
+    String doromyoungRegExp5 = r'[\d]{1,}호';
+    // r'^([가-힣]{2,}(구))(\s+)([가-힣]{2,}동)';
     // r'^([가-힣]{2,}구)(\s)([가-힣]{2,}동)(\s)(\d{2,}아파트)(\s)(\d{2,}호)';
 
     // r'^([가-힣]+(\d{1,5}|\d{1,5}(,|.)\d{1,5}|))+(구)([가-힣]+(\d{1,5}|\d{1,5}(,|.)\d{1,5}|))+(동)([가-힣]+(\d{1,5}|\d{1,5}(,|.)\d{1,5}|))+(아파트)$';
@@ -406,7 +413,12 @@ class ImageEditorState extends State<ImageEditor>
     // RegExp regEx11 = RegExp(sigudongapartment);
     // RegExp regEx12= RegExp(dongapartment);
     // RegExp regEx13 = RegExp(doromyoung);
-    //
+    RegExp regEx100 = RegExp(doromyoungRegExp);
+    RegExp regEx101 = RegExp(doromyoungRegExp0);
+    RegExp regEx102 = RegExp(doromyoungRegExp2);
+    RegExp regEx103 = RegExp(doromyoungRegExp3);
+    RegExp regEx104 = RegExp(doromyoungRegExp4);
+    RegExp regEx105 = RegExp(doromyoungRegExp5);
 
 
     if(Provider.of<Regex_model>(context, listen: false).isPr == true) {
@@ -425,6 +437,34 @@ class ImageEditorState extends State<ImageEditor>
       }
     }
 
+    for(TextBlock block in recognisedText.blocks){
+      for(TextLine line in block.lines){
+        if(regEx6.hasMatch(line.text))
+        {
+          for(TextElement element in line.elements)
+          {
+            if(regEx100.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx101.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx102.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx103.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx104.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx105.hasMatch(element.text)){
+              _elements.add(element);
+            }
+          }
+        }
+      }
+    }
     for (TextBlock block in recognisedText.blocks) {
       for (TextLine line in block.lines) {
         for (TextElement element in line.elements)
