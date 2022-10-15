@@ -722,6 +722,52 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
     }
   }
 
+  void _showDialog1(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0)
+            ),
+          title: new Text("백그라운드 기능이 활성화 되었습니다."),
+          content: new Text("디바이스 내 새로 쌓이는 이미지에 대해 자동감지 활성화"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("닫기"),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            )
+          ]
+        );
+      }
+    );
+  }
+
+  void _showDialog2(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0)
+            ),
+              title: new Text("백그라운드 기능이 비활성화 되었습니다."),
+              content: new Text(""),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text("닫기"),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                )
+              ]
+          );
+        }
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -731,7 +777,6 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     Offset distance =
@@ -751,10 +796,16 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
+                      if(Provider.of<Regex_model>(context, listen:false).isPr == false)
+                        {
+                          _showDialog1();
+                        }else
+                          {
+                            _showDialog2();
+                          }
                       Provider.of<Regex_model>(context, listen: false).changeccc();
                       Provider.of<Regex_model>(context,listen: false).saveisPr();
                     });
-                    print(Provider.of<Regex_model>(context, listen: false).isPr);
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -783,32 +834,62 @@ class _neuorphismButton1State extends State<neuorphismButton1> {
                     ),
                     child: SizedBox(
                       child: Align(
-                        child: ImageData(
-                          IconsPath.shield,
-                          color: Provider.of<Regex_model>(context).isPr
-                              ? Colors.white
-                              : Colors.black,
-                          width: 0.1,
+                        child: Column(
+                          children: [
+                            Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.04)),
+                            Icon(
+                                Provider.of<Regex_model>(context).isPr
+                                ? Icons.lock_rounded
+                                : Icons.lock_open
+                                ,size:MediaQuery.of(context).size.height * 0.23,color: Colors.black38),
+                            // Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                            // Provider.of<Regex_model>(context).isPr
+                            //     ? Text(" ON ",
+                            //   style: TextStyle(
+                            //     fontWeight:FontWeight.bold,
+                            //     fontSize: 13,
+                            //     color: Colors.black,
+                            //   ),)
+                            //     : Text(" OFF ",
+                            //   style: TextStyle(
+                            //     fontWeight:FontWeight.bold,
+                            //     fontSize: 13,
+                            //     color: Colors.black,
+                            //   ),),
+                          ],
                         ),
+                        // ImageData(
+                        //   IconsPath.shield,
+                        //   color: Provider.of<Regex_model>(context).isPr
+                        //       ? Colors.white
+                        //       : Colors.black,
+                        //   width: 0.1,
+                        // ),
                       ),
                     ),
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.only(bottom: 20.0)),
-              Provider.of<Regex_model>(context).isPr
-                  ? Text(" 백그라운드 감지가 활성화중입니다. ",
-                style: TextStyle(
-                fontWeight:FontWeight.bold,
-                fontSize: 23,
-                color: Colors.black,
-              ),)
-                  : Text(" 백그라운드 감지가 해제되었습니다. ",
-                style: TextStyle(
-                fontWeight:FontWeight.bold,
-                fontSize: 23,
-                color: Colors.black,
-              ),),
+              // Switch(activeTrackColor: Colors.black38,activeColor: Colors.black38,value: Provider.of<Regex_model>(context).isPr, onChanged: (value) {
+              //   setState(() {
+              //     Provider.of<Regex_model>(context,listen:false).changeccc();
+              //     Provider.of<Regex_model>(context,listen: false).saveisPr();
+              //   });
+              // },)
+              // Padding(padding: EdgeInsets.only(bottom: 20.0)),
+              // Provider.of<Regex_model>(context).isPr
+              //     ? Text(" 백그라운드 감지가 활성화중입니다. ",
+              //   style: TextStyle(
+              //   fontWeight:FontWeight.bold,
+              //   fontSize: 23,
+              //   color: Colors.black,
+              // ),)
+              //     : Text(" 백그라운드 감지가 해제되었습니다. ",
+              //   style: TextStyle(
+              //   fontWeight:FontWeight.bold,
+              //   fontSize: 23,
+              //   color: Colors.black,
+              // ),),
             ],
           ),
         ),
