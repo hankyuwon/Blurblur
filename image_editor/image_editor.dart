@@ -226,11 +226,20 @@ class ImageEditorState extends State<ImageEditor>
     String zoominbunho =
         r'^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4][0-9]{6}$';
 
-    String Zibunzooso =
-        r'^(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d-]+)|(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d][^시]+)$';
+    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})?';
+    String ZibunzoosoRegExp0 = r'[가-힣]{1,}시';
+    String ZibunzoosoRegExp1 = r'[가-힣]{1,}구';
+    String ZibunzoosoRegExp2 = r'[가-힣]{1,}로';
+    String ZibunzoosoRegExp3 = r'[^가-힣]{1,}';
 
-    String doromyoung =
-        r'^((([가-힣]+(\d{1,5}|\d{1,5}(,|.)\d{1,5}|)+(읍|면|동|가|리))(^구|)((\d{1,5}(~|-)\d{1,5}|\d{1,5})(가|리|)|))([](산(\d{1,5}(~|-)\d{1,5}|\d{1,5}))|)|(([가-힣]|(\d{1,5}(~|-)\d{1,5})|\d{1,5})+(로|길)))$';
+    String doromyoung = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?(([가-힣]{1,}동))?(\s)?(([가-힣]{1,}아파트)+)';
+    String doromyoungRegExp0 = r'[가-힣]{1,}시';
+    String doromyoungRegExp = r'[가-힣]{1,}동';
+    String doromyoungRegExp2 = r'[가-힣]{1,}아파트';
+    String doromyoungRegExp3 = r'[가-힣]{1,}구';
+    String doromyoungRegExp4 = r'[\d]{1,}동';
+    String doromyoungRegExp5 = r'[\d]{1,}호';
+
 
     String woonjunmyunhu = r'^(\d{2}-\d{2}-\d{6}-\d{2})$';
 
@@ -248,6 +257,20 @@ class ImageEditorState extends State<ImageEditor>
     RegExp regEx8 = RegExp(tongjang);
     RegExp regEx9 = RegExp(card);
 
+
+    RegExp regEx100 = RegExp(doromyoungRegExp);
+    RegExp regEx101 = RegExp(doromyoungRegExp0);
+    RegExp regEx102 = RegExp(doromyoungRegExp2);
+    RegExp regEx103 = RegExp(doromyoungRegExp3);
+    RegExp regEx104 = RegExp(doromyoungRegExp4);
+    RegExp regEx105 = RegExp(doromyoungRegExp5);
+
+    RegExp regEx200 = RegExp(ZibunzoosoRegExp0);
+    RegExp regEx201 = RegExp(ZibunzoosoRegExp1);
+    RegExp regEx202 = RegExp(ZibunzoosoRegExp2);
+    RegExp regEx203 = RegExp(ZibunzoosoRegExp3);
+
+
     for (TextBlock block in recognisedText2.blocks) {
       for (TextLine line in block.lines) {
         for (TextElement element in line.elements) {
@@ -262,6 +285,57 @@ class ImageEditorState extends State<ImageEditor>
       }
     }
 
+    for(TextBlock block in recognisedText2.blocks){
+      for(TextLine line in block.lines){
+        if(regEx5.hasMatch(line.text) &&C==true)
+        {
+          for(TextElement element in line.elements)
+          {
+            if(regEx200.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx201.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx202.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx203.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+          }
+        }
+      }
+    }
+
+    for(TextBlock block in recognisedText2.blocks){
+      for(TextLine line in block.lines){
+        if(regEx6.hasMatch(line.text) &&C==true)
+        {
+          for(TextElement element in line.elements)
+          {
+            if(regEx100.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx101.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx102.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx103.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx104.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+            if(regEx105.hasMatch(element.text)){
+              _elements2.add(element);
+            }
+          }
+        }
+      }
+    }
 
     print('여기서 멈추면 3');
     for (TextBlock block in recognisedText2.blocks) {
@@ -283,16 +357,16 @@ class ImageEditorState extends State<ImageEditor>
             print('주민번호');
             _elements2.add(element);
           }
-          if (regEx5.hasMatch(element.text)&&C==true)
-          {
-            print('지번주소');
-            _elements2.add(element);
-          }
-          if (regEx6.hasMatch(element.text)&&C==true)
-          {
-            print('도로명주소');
-            _elements2.add(element);
-          }
+          // if (regEx5.hasMatch(element.text)&&C==true)
+          // {
+          //   print('지번주소');
+          //   _elements2.add(element);
+          // }
+          // if (regEx6.hasMatch(element.text)&&C==true)
+          // {
+          //   print('도로명주소');
+          //   _elements2.add(element);
+          // }
           if (regEx7.hasMatch(element.text)&&D==true)
           {
             print('운전면허');
@@ -360,8 +434,12 @@ class ImageEditorState extends State<ImageEditor>
     String zoominbunho =
         r'^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4][0-9]{6}$';
 
-    String Zibunzooso =
-        r'^(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d-]+)|(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d][^시]+)$';
+    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})?';
+    String ZibunzoosoRegExp0 = r'[가-힣]{1,}시';
+    String ZibunzoosoRegExp1 = r'[가-힣]{1,}구';
+    String ZibunzoosoRegExp2 = r'[가-힣]{1,}로';
+    String ZibunzoosoRegExp3 = r'[^가-힣]{1,}';
+    // r'^(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d-]+)|(([가-힣A-Za-z·\d~\-\.]+(읍|동)\s)[\d][^시]+)$';
 
     // String sigudong = r'^(|[가-힣A-Za-z·\d~\-\.]{2,}(시))(\s)[가-힣A-Za-z·\d~\-\.]{2,}(구)(\s)[가-힣A-Za-z·\d~\-\.]{2,}(동)(\s)[가-힣A-Za-z·\d~\-\.]{2,}(아파트)(\s)[0-9]{0,3}(동)(\s)[가-힣A-Za-z·\d~\-\.]{2,}(호)$';
 
@@ -420,6 +498,11 @@ class ImageEditorState extends State<ImageEditor>
     RegExp regEx104 = RegExp(doromyoungRegExp4);
     RegExp regEx105 = RegExp(doromyoungRegExp5);
 
+    RegExp regEx200 = RegExp(ZibunzoosoRegExp0);
+    RegExp regEx201 = RegExp(ZibunzoosoRegExp1);
+    RegExp regEx202 = RegExp(ZibunzoosoRegExp2);
+    RegExp regEx203 = RegExp(ZibunzoosoRegExp3);
+
 
     if(Provider.of<Regex_model>(context, listen: false).isPr == true) {
       for (TextBlock block in recognisedText.blocks) {
@@ -439,7 +522,30 @@ class ImageEditorState extends State<ImageEditor>
 
     for(TextBlock block in recognisedText.blocks){
       for(TextLine line in block.lines){
-        if(regEx6.hasMatch(line.text))
+        if(regEx5.hasMatch(line.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
+        {
+          for(TextElement element in line.elements)
+          {
+            if(regEx200.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx201.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx202.hasMatch(element.text)){
+              _elements.add(element);
+            }
+            if(regEx203.hasMatch(element.text)){
+              _elements.add(element);
+            }
+          }
+        }
+      }
+    }
+
+    for(TextBlock block in recognisedText.blocks){
+      for(TextLine line in block.lines){
+        if(regEx6.hasMatch(line.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
         {
           for(TextElement element in line.elements)
           {
@@ -465,6 +571,8 @@ class ImageEditorState extends State<ImageEditor>
         }
       }
     }
+
+
     for (TextBlock block in recognisedText.blocks) {
       for (TextLine line in block.lines) {
         for (TextElement element in line.elements)
@@ -484,17 +592,17 @@ class ImageEditorState extends State<ImageEditor>
             print('주민번호');
             _elements.add(element);
           }
-          if (regEx5.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
-          {
-            print('지번주소');
-            _elements.add(element);
-          }
-          if (regEx6.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
-          {
-            print('도로명주소');
-            _elements.add(element);
-          }
-          // if (regEx11.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
+          // if (regEx5.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
+          // {
+          //   print('지번주소');
+          //   _elements.add(element);
+          // }
+          // if (regEx6.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
+          // {
+          //   print('도로명주소');
+          //   _elements.add(element);
+          // }
+          // // if (regEx11.hasMatch(element.text) && Provider.of<Regex_model>(context, listen: false).isSwitched3 == true)
           // {
           //   print('도로명주소');
           //   _elements.add(element);
