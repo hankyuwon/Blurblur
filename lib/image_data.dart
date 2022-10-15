@@ -22,5 +22,5 @@ class ImageData extends StatelessWidget {
 }
 
 class IconsPath {
-  static String get shield => 'assets/images/shield.png';
+  static String get shield => 'assets/images/green_shield.png';
 }
