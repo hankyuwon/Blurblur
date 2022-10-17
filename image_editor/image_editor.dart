@@ -226,7 +226,7 @@ class ImageEditorState extends State<ImageEditor>
     String zoominbunho =
         r'^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4][0-9]{6}$';
 
-    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})?';
+    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})';
     String ZibunzoosoRegExp0 = r'[가-힣]{1,}시';
     String ZibunzoosoRegExp1 = r'[가-힣]{1,}구';
     String ZibunzoosoRegExp2 = r'[가-힣]{1,}로';
@@ -434,7 +434,7 @@ class ImageEditorState extends State<ImageEditor>
     String zoominbunho =
         r'^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4][0-9]{6}$';
 
-    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})?';
+    String Zibunzooso = r'([가-힣]{1,}시)?(\s)?([가-힣]{1,}구)?(\s)?([가-힣]{1,}로)(\s)?([^가-힣]{1,})';
     String ZibunzoosoRegExp0 = r'[가-힣]{1,}시';
     String ZibunzoosoRegExp1 = r'[가-힣]{1,}구';
     String ZibunzoosoRegExp2 = r'[가-힣]{1,}로';
